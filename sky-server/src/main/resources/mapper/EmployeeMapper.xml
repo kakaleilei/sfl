@@ -24,10 +24,10 @@
                 id_number = #{idNumber},
             </if>
             <if test="updateTime != null">
-                update_time = #{updateTime}
+                update_time = #{updateTime},
             </if>
             <if test="updateUser != null">
-                update_user = #{updateUser}
+                update_user = #{updateUser},
             </if>
             <if test="status != null">
                 status = #{status},
