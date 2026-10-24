@@ -1,8 +1,12 @@
 package com.sfl.mapper;
+import com.github.pagehelper.Page;
+import com.sfl.dto.EmployeePageQueryDTO;
 import com.sfl.entity.Employee;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface EmployeeMapper {
@@ -23,4 +27,17 @@ public interface EmployeeMapper {
             "values (#{username}, #{password}, #{name}, #{phone}, #{sex}, #{idNumber}, #{status}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})")
     void insert(Employee employee);
 
+
+    /**
+     * 分页查询员工信息
+     * @param employeePageQueryDTO
+     * @return
+     */
+    Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+
+    /**
+     * 根据主键动态更新员工信息
+     * @param employee
+     */
+    void update(Employee employee);
 }

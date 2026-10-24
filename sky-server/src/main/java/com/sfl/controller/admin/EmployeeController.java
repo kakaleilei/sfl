@@ -3,8 +3,10 @@ package com.sfl.controller.admin;
 import com.sfl.constant.JwtClaimsConstant;
 import com.sfl.dto.EmployeeDTO;
 import com.sfl.dto.EmployeeLoginDTO;
+import com.sfl.dto.EmployeePageQueryDTO;
 import com.sfl.entity.Employee;
 import com.sfl.properties.JwtProperties;
+import com.sfl.result.PageResult;
 import com.sfl.result.Result;
 import com.sfl.service.EmployeeService;
 import com.sfl.utils.JwtUtil;
@@ -13,10 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -77,6 +76,22 @@ public class EmployeeController {
     public Result<String> save(@RequestBody EmployeeDTO employeeDTO) {
         log.info("新增员工：{}", employeeDTO);
         employeeService.save(employeeDTO);
+        return Result.success();
+    }
+
+    @GetMapping("/page")
+    @Operation(summary = "分页查询员工")
+    public Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO) {
+        log.info("分页查询员工：{} {} {}", employeePageQueryDTO.getName(), employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+        PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
+        return Result.success(pageResult);
+    }
+
+    @PostMapping("/status/{status}")
+    @Operation(summary ="启用禁用员工账号")
+    public Result startOrStop(@PathVariable("status") Integer status, Long id){
+        log.info("启用禁用员工账号{},{}", status, id);
+        employeeService.startOrStop(status,id);
         return Result.success();
     }
 }

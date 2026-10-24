@@ -1,15 +1,19 @@
 package com.sfl.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sfl.constant.MessageConstant;
 import com.sfl.constant.PasswordConstant;
 import com.sfl.constant.StatusConstant;
 import com.sfl.context.BaseContext;
 import com.sfl.dto.EmployeeDTO;
 import com.sfl.dto.EmployeeLoginDTO;
+import com.sfl.dto.EmployeePageQueryDTO;
 import com.sfl.entity.Employee;
 import com.sfl.exception.AccountNotFoundException;
 import com.sfl.exception.PasswordErrorException;
 import com.sfl.mapper.EmployeeMapper;
+import com.sfl.result.PageResult;
 import com.sfl.service.EmployeeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +82,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.insert(employee);
+    }
+
+    @Override
+    public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
+        //开始分页查询
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+
+        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
+        return new PageResult(page.getTotal(), page.getResult());
+    }
+
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        Employee employee = Employee.builder()
+                .id(id)
+                .status(status)
+                .build();
+        employeeMapper.update(employee);
     }
 }
